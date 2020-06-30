@@ -238,19 +238,13 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public int insertClienteAutoId(Cliente c) {
 		// TODO Auto-generated method stub
-		return clienteDao.insertClienteAutoId(c);
+		return clienteDao.insertClienteautoId(c);
 	}
 
 	@Override
 	public void updateCliente(Cliente c) {
 		clienteDao.updateCliente(c);
 		
-	}
-
-	@Override
-	public int ejecutarProcJdbc(Integer cliente, Boolean estado) {
-		// TODO Auto-generated method stub
-		return clienteDao.ejecutarProcedimientoJdbc(cliente, estado);
 	}
 
 	@Override
@@ -301,6 +295,11 @@ public class ClienteServiceImpl implements ClienteService {
 		}
 		
 		return coleccion;
+	}
+
+	@Override
+	public int ejecutarProcedimientoJdbc(Integer cliente, Boolean estado) {
+		return clienteDao.ejecutarProcedimientoJdbc(cliente, estado);
 	}
 	
 	

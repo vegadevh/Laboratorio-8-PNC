@@ -9,7 +9,7 @@ import com.uca.capas.modelo.domain.Vehiculo;
 
 public interface ClienteDAO {
 	
-	public List<Cliente> findAll() throws DataAccessException;
+public List<Cliente> findAll() throws DataAccessException;
 	
 	public Cliente findOne(Integer codigo) throws DataAccessException;
 	
@@ -23,7 +23,7 @@ public interface ClienteDAO {
 
 	public List<Cliente> getClientesFechaEstado(Calendar fecha, Boolean estado);
 	
-	public int insertClienteAutoId(Cliente c);
+	public int insertClienteautoId(Cliente c);
 	
 	public void updateCliente(Cliente c);
 	

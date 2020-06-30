@@ -45,10 +45,10 @@ public interface ClienteService {
 	
 	public int insertClienteAutoId(Cliente c);
 	
-	public void updateCliente(Cliente c);
+	public void updateCliente (Cliente c);
 	
-	public int ejecutarProcJdbc(Integer cliente, Boolean estado);
+	public int ejecutarProcedimientoJdbc(Integer cliente, Boolean estado);
 	
-	public int[][] cargaMasiva() throws ParseException;
+	public int [][] cargaMasiva() throws ParseException;
 
 }

@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -45,6 +44,9 @@ public class ClienteDAOImpl implements ClienteDAO {
 	 * con la propiedad unitName, con esto tenemos el objeto EntityManager
 	 * de la base de datos definida en nuestra clase de configuracion de Jpa
 	 */
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
 	@PersistenceContext(unitName = "modelo-persistence")
 	EntityManager entityManager;
 	
@@ -200,30 +202,6 @@ public class ClienteDAOImpl implements ClienteDAO {
 		return resultado;
 	}
 	
-	//JDBC
-	@Autowired
-	JdbcTemplate jdbcTemplate;
-
-	@Override
-	public int insertClienteAutoId(Cliente c) {
-		SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-				.withSchemaName("store")
-				.withTableName("cliente")
-				//PK
-				.usingGeneratedKeyColumns("c_cliente");
-		
-		//Valores del insert
-		Map<String, Object> parametros = new HashMap<String, Object>();
-		parametros.put("s_nombre", c.getSnombres());
-		parametros.put("s_apellidos", c.getSapellidos());
-		parametros.put("f_nacimiento", c.getFnacimiento());
-		parametros.put("b_activo", c.getBactivo());
-		
-		//El metodo executeAnReturnKey devuelve la llave primaria generada en el insert
-		Number id_generated = jdbcInsert.executeAndReturnKey(parametros);
-		return id_generated.intValue();
-	}
-	
 	private static final String sql = "UPDATE store.cliente SET s_nombres = ?, s_apellidos = ?, f_nacimiento = ?, b_activo = ? WHERE c_cliente = ?";
 
 	@Override
@@ -272,6 +250,23 @@ public class ClienteDAOImpl implements ClienteDAO {
 			
 		});
 		return resultado;
+	}
+
+	@Override
+	public int insertClienteautoId(Cliente c) {
+		SimpleJdbcInsert jdbcInsert=new SimpleJdbcInsert(jdbcTemplate)
+				.withSchemaName("store")
+				.withTableName("cliente")
+				.usingGeneratedKeyColumns("c_cliente");
+		Map<String,Object> parametros = new HashMap<String, Object>();
+		parametros.put("s_nombres", c.getSnombres());
+		parametros.put("s_apellidos", c.getSapellidos());
+		parametros.put("f_nacimiento", c.getFnacimiento());
+		parametros.put("b_activo", c.getBactivo());
+		
+		//El metodo executeAnReturnKey devuelve la llave primaria generada en el insert
+		Number id_generated = jdbcInsert.executeAndReturnKey(parametros);
+		return id_generated.intValue();
 	}
 	
 	
