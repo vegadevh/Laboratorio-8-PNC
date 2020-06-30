@@ -234,4 +234,76 @@ public class ClienteServiceImpl implements ClienteService {
 
 		return clientes;
 	}
+
+	@Override
+	public int insertClienteAutoId(Cliente c) {
+		// TODO Auto-generated method stub
+		return clienteDao.insertClienteAutoId(c);
+	}
+
+	@Override
+	public void updateCliente(Cliente c) {
+		clienteDao.updateCliente(c);
+		
+	}
+
+	@Override
+	public int ejecutarProcJdbc(Integer cliente, Boolean estado) {
+		// TODO Auto-generated method stub
+		return clienteDao.ejecutarProcedimientoJdbc(cliente, estado);
+	}
+
+	@Override
+	public int[][] cargaMasiva() throws ParseException {
+		List<Vehiculo> vehiculos = prepararColeccion();
+		int[][] cantidad = clienteDao.batchInsertVehiculos(vehiculos);
+		return cantidad;
+	}
+
+	private List<Vehiculo> prepararColeccion() throws ParseException{
+		String csv = "C:\\Users\\vegad\\Desktop\\Universidad\\2020\\n-capas\\Labo8\\Laboratorio-8-PNC\\vehiculos.csv";
+		
+		List<Vehiculo> coleccion = new ArrayList<Vehiculo>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		try {
+			br = new BufferedReader(new FileReader(csv));
+			while((line = br.readLine()) != null) {
+				String[] vStr = line.split(cvsSplitBy);
+				Vehiculo v = new Vehiculo();
+				v.setCvehiculo(Integer.parseInt(vStr[0]));
+				v.setSmarca(vStr[1]);
+				v.setSmodelo(vStr[2]);
+				v.setSchassis(vStr[3]);
+				cal.setTime(sdf.parse(vStr[4]));
+				v.setFcompra(cal);
+				v.setBestado(vStr[5].equals("t") ? true : false);
+				v.setCcliente(Integer.parseInt(vStr[6]));
+				
+				coleccion.add(v);
+			}
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}finally {
+			if(br != null) {
+				try {
+					br.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return coleccion;
+	}
+	
+	
+	
+	
 }
