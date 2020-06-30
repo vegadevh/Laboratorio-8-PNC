@@ -16,17 +16,18 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.uca.capas.modelo.domain.Cliente;
-import com.uca.capas.modelo.domain.Vehiculo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
+import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
+import com.uca.capas.modelo.domain.Cliente;
+import com.uca.capas.modelo.domain.Vehiculo;
 
 /*
  * Esta anotacion le dice a Spring que este es un objeto DAO, por lo que sera
@@ -220,7 +221,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 				.withoutProcedureColumnMetaDataAccess();
 		jdbcCall.addDeclaredParameter(new SqlParameter("P_CLIENTE", Types.INTEGER));
 		jdbcCall.addDeclaredParameter(new SqlParameter("P_ESTADO", Types.BOOLEAN));
-		jdbcCall.addDeclaredParameter(new SqlParameter("P_SALIDA", Types.INTEGER));
+		jdbcCall.addDeclaredParameter(new SqlOutParameter("P_SALIDA", Types.INTEGER));
 		
 		Map<String, Object> parametros = new HashMap<>();
 		parametros.put("P_CLIENTE", cliente);
@@ -232,7 +233,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 
 	@Override
 	public int[][] batchInsertVehiculos(List<Vehiculo> vehiculos) {
-		String sql = "INSERT INTO store.vehiculo " + "(c_vehiculo, s_marca, s_modelo, s_chasis, f_compra, b_estado, c_cliente) VALUES (?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO store.vehiculo " + "(c_vehiculo, s_marca, s_modelo, s_chassis, f_compra, b_estado, c_cliente) VALUES (?,?,?,?,?,?,?)";
 		int[][] resultado = jdbcTemplate.batchUpdate(sql, vehiculos, 1000, new ParameterizedPreparedStatementSetter<Vehiculo>() {
 
 			@Override
